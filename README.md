@@ -7,7 +7,7 @@ The app is a basic Spring Application following the MVC architecture.
 ## API Documentation
 
 Here a link to the API Documentation on postman:
-(Try it out here and learn about how it works) [https://www.postman.com/acre-devs/hng12/request/qyrwonm/classify-numbers]
+[Try it out here and learn about how it works](ttps://www.postman.com/acre-devs/hng12/request/qyrwonm/classify-numbers)
 
 ## Getting started with this repository
 1. Clone the repository to your local machine:
