@@ -7,11 +7,8 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import org.springframework.boot.web.servlet.error.ErrorController;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dawn.origins.model.InterestingNumber;
@@ -106,7 +103,7 @@ public class InterestingNumberController implements ErrorController {
     }
 
     @GetMapping("/api/classify-number")
-    public InterestingNumber classifyNumber(@RequestParam(value = "number", defaultValue = "") String numberStr) {
+    public Object classifyNumber(@RequestParam(value = "number", defaultValue = "") String numberStr) {
         try {
             int number = Integer.parseInt(numberStr);
             return new InterestingNumber(
@@ -117,14 +114,15 @@ public class InterestingNumberController implements ErrorController {
                     getDigitSum(number),
                     getFunFact(number));
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid number");
+            return new InterestingNumberApiErrorResponse(numberStr, true);
         }
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public InterestingNumberApiErrorResponse handleBadRequest(IllegalArgumentException e) {
-        return new InterestingNumberApiErrorResponse("alphabet", true);
-    }
+    // @ExceptionHandler(IllegalArgumentException.class)
+    // @ResponseStatus(HttpStatus.BAD_REQUEST)
+    // public InterestingNumberApiErrorResponse
+    // handleBadRequest(IllegalArgumentException e) {
+    // return new InterestingNumberApiErrorResponse("alphabet", true);
+    // }
 
 }
