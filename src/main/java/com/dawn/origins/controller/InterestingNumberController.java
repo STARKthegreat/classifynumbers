@@ -4,9 +4,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,8 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dawn.origins.model.InterestingNumber;
 import com.dawn.origins.model.InterestingNumberApiErrorResponse;
 
+// @ControllerAdvice
 @RestController
-public class InterestingNumberController implements ErrorController {
+public class InterestingNumberController {
 
     private boolean isPrime(int number) {
         if (number <= 1) {
@@ -105,7 +107,8 @@ public class InterestingNumberController implements ErrorController {
     @GetMapping("/api/classify-number")
     public Object classifyNumber(@RequestParam(value = "number", defaultValue = "") String numberStr) {
         try {
-            int number = Integer.parseInt(numberStr);
+            String param = URLEncoder.encode(numberStr, StandardCharsets.UTF_8);
+            int number = Integer.parseInt(param);
             return new InterestingNumber(
                     number,
                     isPrime(number),
@@ -113,16 +116,10 @@ public class InterestingNumberController implements ErrorController {
                     getProperties(number),
                     getDigitSum(number),
                     getFunFact(number));
-        } catch (IllegalArgumentException e) {
+        } catch (NumberFormatException e) {
+            // throw new IllegalArgumentException("Invalid number: " + numberStr);
             return new InterestingNumberApiErrorResponse(numberStr, true);
         }
     }
-
-    // @ExceptionHandler(IllegalArgumentException.class)
-    // @ResponseStatus(HttpStatus.BAD_REQUEST)
-    // public InterestingNumberApiErrorResponse
-    // handleBadRequest(IllegalArgumentException e) {
-    // return new InterestingNumberApiErrorResponse("alphabet", true);
-    // }
 
 }
